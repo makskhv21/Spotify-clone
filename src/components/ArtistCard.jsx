@@ -1,33 +1,15 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { DetailsHeader, Error, Loader, RelatedSongs } from '../components';
-import { useGetArtistDetailsQuery } from '../redux/services/shazamCore';
+import { useNavigate } from 'react-router-dom';
 
-const ArtistDetails = () => {
-  const { id: artistId } = useParams();
-  const { activeSong, isPlaying } = useSelector((state) => state.player);
-  const { data: artistData, isFetching: isFetchingArtistDetails, error } = useGetArtistDetailsQuery(artistId);
-
-  if (isFetchingArtistDetails) return <Loader title="Searching artist details..." />;
-
-  if (error) return <Error />;
+const ArtistCard = ({ track }) => {
+  const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col">
-      <DetailsHeader
-        artistId={artistId}
-        artistData={artistData}
-      />
-
-      <RelatedSongs
-        data={Object.values(artistData?.songs)}
-        artistId={artistId}
-        isPlaying={isPlaying}
-        activeSong={activeSong}
-      />
+    <div className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer" onClick={() => navigate(`/artists/${track?.artists[0].adamid}`)}>
+      <img alt="artist" src={track?.images?.coverart} className="w-full h-36 rounded-lg" />
+      <p className="mt-4 font-semibold text-lg text-white truncate">{track?.subtitle}</p>
     </div>
   );
 };
 
-export default ArtistDetails;
+export default ArtistCard;
