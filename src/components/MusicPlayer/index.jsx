@@ -11,11 +11,11 @@ import VolumeBar from './VolumeBar';
 const MusicPlayer = () => {
   const { activeSong, currentSongs, currentIndex, isActive, isPlaying } = useSelector((state) => state.player);
   const [duration, setDuration] = useState(0);
-  const [seekTime, setSeekTime] = useState(0);
-  const [appTime, setAppTime] = useState(0);
+  const [playbackPosition, setPlaybackPosition] = useState(0);
+  const [appRuntime , setAppRuntime ] = useState(0);
   const [volume, setVolume] = useState(0.3);
   const [repeat, setRepeat] = useState(false);
-  const [shuffle, setShuffle] = useState(false);
+  const [randomize, setRandomize] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const MusicPlayer = () => {
   const handleNextSong = () => {
     dispatch(playPause(false));
 
-    if (!shuffle) {
+    if (!randomize) {
       dispatch(nextSong((currentIndex + 1) % currentSongs.length));
     } else {
       dispatch(nextSong(Math.floor(Math.random() * currentSongs.length)));
@@ -45,7 +45,7 @@ const MusicPlayer = () => {
   const handlePrevSong = () => {
     if (currentIndex === 0) {
       dispatch(prevSong(currentSongs.length - 1));
-    } else if (shuffle) {
+    } else if (randomize) {
       dispatch(prevSong(Math.floor(Math.random() * currentSongs.length)));
     } else {
       dispatch(prevSong(currentIndex - 1));
@@ -61,30 +61,30 @@ const MusicPlayer = () => {
           isActive={isActive}
           repeat={repeat}
           setRepeat={setRepeat}
-          shuffle={shuffle}
-          setShuffle={setShuffle}
+          randomize={randomize}
+          setRandomize={setRandomize}
           currentSongs={currentSongs}
           handlePlayPause={handlePlayPause}
           handlePrevSong={handlePrevSong}
           handleNextSong={handleNextSong}
         />
         <Seekbar
-          value={appTime}
+          value={appRuntime}
           min="0"
           max={duration}
-          onInput={(event) => setSeekTime(event.target.value)}
-          setSeekTime={setSeekTime}
-          appTime={appTime}
+          onInput={(event) => setPlaybackPosition (event.target.value)}
+          setPlaybackPosition ={setPlaybackPosition }
+          appRuntime={appRuntime}
         />
         <Player
           activeSong={activeSong}
           volume={volume}
           isPlaying={isPlaying}
-          seekTime={seekTime}
+          playbackPosition ={playbackPosition }
           repeat={repeat}
           currentIndex={currentIndex}
           onEnded={handleNextSong}
-          onTimeUpdate={(event) => setAppTime(event.target.currentTime)}
+          onTimeUpdate={(event) => setAppRuntime(event.target.currentTime)}
           onLoadedData={(event) => setDuration(event.target.duration)}
         />
       </div>
